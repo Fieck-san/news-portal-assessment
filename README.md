@@ -8,7 +8,15 @@ Project based on the Malaysiakini news page.
 
 ## Run With Docker
 
-Make sure Docker Desktop is running, then run this from the project root:
+Make sure Docker Desktop is running, then clone and start the project:
+
+```bash
+git clone https://github.com/Fieck-san/news-portal-assessment.git
+cd news-portal-assessment
+docker compose up --build
+```
+
+If the project is already cloned, just run this from the project root:
 
 ```bash
 docker compose up --build
@@ -60,7 +68,20 @@ GET /api/news?lang=ms
 
 Docker is the easiest way to run the project, but the backend can also be run manually if PHP, composer, and mysql are installed.
 
-For manual setup, create a MySQL database named `news_portal` first. After copying `.env.example`, change `DB_HOST` to `127.0.0.1` in `backend/.env` if MySQL is running on your machine.
+Clone the repo:
+
+```bash
+git clone https://github.com/Fieck-san/news-portal-assessment.git
+cd news-portal-assessment
+```
+
+Create the MySQL database:
+
+```sql
+CREATE DATABASE news_portal;
+```
+
+Run that SQL in MySQL Workbench, phpMyAdmin, or the MySQL terminal.
 
 Backend:
 
@@ -69,17 +90,38 @@ cd backend
 cp .env.example .env
 composer install
 php artisan key:generate
+```
+
+Then open `backend/.env` and check these values:
+
+```text
+DB_HOST=127.0.0.1
+DB_DATABASE=news_portal
+DB_USERNAME=root
+DB_PASSWORD=123456
+```
+
+Use the MySQL username and password from your own machine if they are different.
+
+Then run:
+
+```bash
 php artisan migrate:fresh --seed
 php artisan serve
 ```
 
-Frontend:
+Leave the backend terminal running. Open a second terminal for the frontend:
 
 ```bash
 cd frontend
 npm install
 npm start
 ```
+
+Open these URLs:
+
+- Frontend: http://localhost:4200
+- API: http://localhost:8000/api/news
 
 ## Tests
 
