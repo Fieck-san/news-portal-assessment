@@ -1,0 +1,15 @@
+.DS_Store
+.env
+node_modules/
+vendor/
+dist/
+coverage/
+.angular/
+.phpunit.cache/
+.phpunit.result.cache
+storage/*.key
+backend/.phpunit.result.cache
+backend/bootstrap/cache/*.php
+!backend/bootstrap/cache/.gitkeep
+backend/storage/logs/*.log
+backend/storage/framework/cache/data/
