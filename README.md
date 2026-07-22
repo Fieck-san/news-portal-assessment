@@ -60,6 +60,8 @@ GET /api/news?lang=ms
 
 Docker is the easiest way to run the project, but the backend can also be run manually if PHP, composer, and mysql are installed.
 
+For manual setup, create a MySQL database named `news_portal` first. After copying `.env.example`, change `DB_HOST` to `127.0.0.1` in `backend/.env` if MySQL is running on your machine.
+
 Backend:
 
 ```bash
