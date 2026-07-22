@@ -1,0 +1,57 @@
+<header class="site-header">
+  <a class="brand" routerLink="/" aria-label="Malaysia Kini home">
+    <img class="brand-logo" src="/assets/malaysiakini-logo.png" alt="MalaysiaKini">
+  </a>
+
+  <nav
+    id="primary-nav"
+    class="primary-nav"
+    [ngClass]="{ open: isMenuOpen }"
+    aria-label="News categories"
+  >
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">
+      <span class="nav-icon icon-terkini" aria-hidden="true"></span>
+      <span>{{ locale.categoryLabel(null) }}</span>
+    </a>
+    @if (categories$ | async; as categories) {
+      @for (category of categories; track category.slug) {
+        <a [routerLink]="['/category', category.slug]" routerLinkActive="active" (click)="closeMenu()">
+          <span class="nav-icon" [ngClass]="categoryIconClass(category.slug)" aria-hidden="true"></span>
+          <span>{{ category.name }}</span>
+        </a>
+      }
+    }
+  </nav>
+
+  <div class="language-toggle" role="group" [attr.aria-label]="locale.labels().languageLabel">
+    <button
+      type="button"
+      [class.active]="locale.language() === 'en'"
+      [attr.aria-pressed]="locale.language() === 'en'"
+      (click)="locale.setLanguage('en')"
+    >
+      EN
+    </button>
+    <button
+      type="button"
+      [class.active]="locale.language() === 'ms'"
+      [attr.aria-pressed]="locale.language() === 'ms'"
+      (click)="locale.setLanguage('ms')"
+    >
+      BM
+    </button>
+  </div>
+
+  <button
+    class="menu-toggle"
+    type="button"
+    aria-label="Open categories"
+    [attr.aria-expanded]="isMenuOpen"
+    aria-controls="primary-nav"
+    (click)="toggleMenu()"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</header>

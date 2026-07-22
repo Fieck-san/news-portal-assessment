@@ -1,0 +1,79 @@
+<main class="news-shell">
+  @if (newsState$ | async; as state) {
+    <section class="masthead" aria-labelledby="page-title">
+      <div>
+        <p class="section-label">{{ locale.labels().sectionLabel }}</p>
+        <h1 id="page-title">{{ sectionTitle(state.categorySlug) }}</h1>
+      </div>
+      <p class="timestamp">
+        <span class="refresh-icon" aria-hidden="true"></span>
+        @if (state.status === 'ready' && lastUpdatedDate(state.response.data); as updatedAt) {
+          {{ locale.labels().lastUpdated }} {{ formattedDate(updatedAt) }}
+        } @else {
+          {{ locale.labels().lastUpdatedPending }}
+        }
+      </p>
+    </section>
+
+    @if (state.status === 'loading') {
+      <section class="status-panel" aria-live="polite">
+        <span class="pulse-line"></span>
+        <span class="pulse-line short"></span>
+        <p>{{ locale.labels().loading }}</p>
+      </section>
+    }
+
+    @if (state.status === 'error') {
+      <section class="status-panel error" aria-live="assertive">
+        <strong>{{ locale.labels().errorTitle }}</strong>
+        <p>{{ state.message }}</p>
+      </section>
+    }
+
+    @if (state.status === 'ready') {
+      @if (state.response.data.length === 0) {
+        <section class="status-panel">
+          <strong>{{ locale.labels().emptyTitle }}</strong>
+          <p>{{ locale.labels().emptyMessage }}</p>
+        </section>
+      } @else {
+        <section class="news-grid">
+          @for (article of state.response.data; track trackArticle($index, article); let first = $first) {
+            <article class="article" [class.lead]="first && state.response.meta.current_page === 1">
+              @if (article.image_url) {
+                <img [src]="article.image_url" [alt]="article.title" loading="lazy">
+              }
+              <div class="article-copy">
+                <div class="article-meta">
+                  <time [dateTime]="article.published_at || ''">{{ formattedDate(article.published_at) }}</time>
+                </div>
+                <h2>{{ article.title }}</h2>
+                <p>{{ article.summary }}</p>
+                <footer>
+                  <span>{{ article.author?.name || locale.labels().fallbackAuthor }}</span>
+                </footer>
+              </div>
+            </article>
+          }
+        </section>
+
+        <nav class="pager" aria-label="News pagination">
+          <button
+            type="button"
+            (click)="previousPage(state.response.meta)"
+            [disabled]="state.response.meta.current_page === 1"
+          >
+            {{ locale.labels().previous }}
+          </button>
+          <button
+            type="button"
+            (click)="nextPage(state.response.meta)"
+            [disabled]="state.response.meta.current_page === state.response.meta.last_page"
+          >
+            {{ locale.labels().next }}
+          </button>
+        </nav>
+      }
+    }
+  }
+</main>
